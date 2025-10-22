@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Puppeteer the filter!</title>
+<style>
+body{font-family:Arial,Helvetica,sans-serif;margin:16px;background:#fff;color:#111}
+.box{max-width:720px;margin:0 auto;padding:12px;border:1px dashed #999;border-radius:6px}
+h1{font-size:24px;margin:0 0 8px}
+.warn{background:#fff6e6;border:1px solid #e6c57a;padding:8px;border-radius:4px;margin:8px 0}
+.instructions{background:#e6f0ff;border:1px solid #7ab8e6;padding:8px;border-radius:4px;margin:8px 0}
+label{display:block;margin:10px 0 4px;font-weight:700}
+input[type=text]{width:100%;padding:8px;border:1px solid #bbb;border-radius:4px;font-size:14px}
+.row{display:flex;gap:8px;margin-top:10px}
+button{padding:8px 10px;border-radius:4px;border:0;color:#fff;cursor:pointer}
+button.primary{background:#0b66ff;}  /* blue main button */
+button.ghost{background:#eee;color:#111;border:1px solid #ccc} /* grey buttons */
+.preview{width:100%;padding:8px;border:1px solid #bbb;border-radius:4px;margin-top:10px;font-family:monospace}
+.note{font-size:12px;color:#444;margin-top:8px}
+</style>
+</head>
+<body>
+<div class="box">
+    <h1>Blocksi Puppeteer - Hold a fraction of the power!</h1>
+    <p style="margin: 0;">Be able to <b>temporarily</b> add websites to your agent-wide web filter by manipulating Blocksi's proxy event detection service worker! o7</p>
+    <div class="instructions"><strong>Instructions:</strong><small> Input the host website (the site you want blocked) in the primary host input. Do not mess with proxy token host unless you know what you are doing. Open/Block button opens the page immediately and gets it flagged by Blocksi's dynamic proxy event detection, immediately blocking it. Compose URL button generates the URL for external use. Copy URL button copies generated URL to clipboard.</small></div>
+    <div class="warn"><strong>Warning:</strong> <small>Use at your own risk; for authorized, educational, or lab testing only. This tool can cause immediate, temporary device-level denial-of-service to common services (search engines, Drive, YouTube, & other learning platforms) and enable other non-technical misuses. Do not use on systems you do not own or have written permission to test; the author accepts no liability.</small></div>
+
+    <label for="primary">Primary host (example: https://www.google.com)</label>
+    <input id="primary" type="text" placeholder="https://www.google.com" style="width: 97%;"/>
+
+    <label for="proxy">Proxy token host</label>
+    <input id="proxy" type="text" placeholder="[Leave empty unless you know what you're doing.]" style="width: 97%;"/>
+
+    <div class="row">
+        <button id="open" class="primary" type="button">Open/Block!</button>
+        <button id="compose" class="ghost" type="button">Compose URL</button>
+        <button id="copy" class="ghost" type="button">Copy URL</button>
+    </div>
+
+    <label style="margin-top:12px">Sanitized composed URL (preview)</label>
+    <input id="preview" class="preview" type="text" readonly aria-readonly="true" style="width: 97%;" />
+
+    <div class="note">Want to revert the web filters back to default? Just close your device or shut it down and wait a minute or two for it to soft reset the agent-specific filters, open it back up, log back in, and voilà. If this doesn't work, make sure you have no blocked pages open when you shutdown/restart your device.</div>
+</div>
+
+<script>
+(function () {
+    const primaryEl = document.getElementById('primary');
+    const proxyEl = document.getElementById('proxy');
+    const composeBtn = document.getElementById('compose');
+    const preview = document.getElementById('preview');
+    const copyBtn = document.getElementById('copy');
+    const openBtn = document.getElementById('open');
+
+    function ensureProto(v) {
+        v = (v || '').trim();
+        if (!v) return v;
+        if (!/^https?:\/\//i.test(v)) return 'https://' + v;
+        return v;
+    }
+
+    function sanitizeHostOnly(v) {
+        if (!v) return v;
+        v = v.trim();
+        v = v.replace(/^https?:\/\//i, '').replace(/\/+$/,'');
+        const firstSlash = v.indexOf('/');
+        if (firstSlash !== -1) v = v.slice(0, firstSlash);
+        return v;
+    }
+
+    function buildUrl(primary, proxy) {
+        const p = ensureProto(primary) || 'https://www.google.com';
+        const base = p.replace(/\/+$/,'');
+        const ph = sanitizeHostOnly(proxy) || 'https://lphoky3kt8c1.interseguros.cl/~/uv/hvtrs8%2F-aliuavcjtt.vo-wctah-ole%2Fpkeae%2F120%3Der%3D0162';
+        return base + '/https://' + ph;
+    }
+
+    // Only update preview on Compose button click
+    composeBtn.addEventListener('click', () => {
+        preview.value = buildUrl(primaryEl.value, proxyEl.value);
+    });
+
+    copyBtn.addEventListener('click', async () => {
+        try {
+            const txt = preview.value || buildUrl(primaryEl.value, proxyEl.value);
+            await navigator.clipboard.writeText(txt);
+            const old = copyBtn.textContent;
+            copyBtn.textContent = 'Copied';
+            setTimeout(() => { copyBtn.textContent = old; }, 900);
+        } catch (e) {
+            preview.select();
+            try { document.execCommand && document.execCommand('copy'); } catch(_) {}
+            alert('Copy failed — select and copy manually.');
+        }
+    });
+
+    openBtn.addEventListener('click', () => {
+        const url = preview.value || buildUrl(primaryEl.value, proxyEl.value);
+        window.open(url, '_blank', 'noopener,noreferrer');
+    });
+
+})();
+</script>
+</body>
+</html>
