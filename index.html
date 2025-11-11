@@ -24,8 +24,7 @@ button.ghost{background:#eee;color:#111;border:1px solid #ccc} /* grey buttons *
 <div class="box">
     <h1>Blocksi Puppeteer - Hold a fraction of the power!</h1>
     <p style="margin: 0;">Be able to <b>temporarily</b> add websites to your agent-wide web filter by manipulating Blocksi's proxy event detection service worker! o7</p>
-    <div class="instructions"><strong>Instructions:</strong><small> Input the host website (the site you want blocked) in the primary host input. Do not mess with proxy token host unless you know what you are doing. Open/Block button opens the page immediately and gets it flagged by Blocksi's dynamic proxy event detection, immediately blocking it. Compose URL button generates the URL for external use. Copy URL button copies generated URL to clipboard.</small></div>
-    <div class="warn"><strong>Warning:</strong> <small>Use at your own risk; for authorized, educational, or lab testing only. This tool can cause immediate, temporary device-level denial-of-service to common services (search engines, Drive, YouTube, & other learning platforms) and enable other non-technical misuses. Do not use on systems you do not own or have written permission to test; the author accepts no liability.</small></div>
+
 
     <label for="primary">Primary host (example: https://www.google.com)</label>
     <input id="primary" type="text" placeholder="https://www.google.com" style="width: 97%;"/>
@@ -41,6 +40,10 @@ button.ghost{background:#eee;color:#111;border:1px solid #ccc} /* grey buttons *
 
     <label style="margin-top:12px">Sanitized composed URL (preview)</label>
     <input id="preview" class="preview" type="text" readonly aria-readonly="true" style="width: 97%;" />
+
+    <div class="instructions"><strong>Instructions:</strong><small> Input the host website (the site you want blocked) in the primary host input. Do not mess with proxy token host unless you know what you are doing. Compose URL button generates the URL for external use. The rest of the buttons are self explanatory.</small></div>
+    <div class="warn"><strong>Disclaimer:</strong> <small>Use at your own risk; for authorized, educational, or lab testing only. This tool can cause immediate, temporary device-level denial-of-service to common services (search engines, Drive, YouTube, & other learning platforms) and enable other non-technical misuses. Do not use on systems you do not own or have written permission to test; the author accepts no liability.</small></div>
+    <div class="warn"><strong>Warning:</strong> <small>Blocksi Puppeteer only works when system (Blocksi) administration have dynamic proxy page detection enabled and if they haven't manually blocked the block host token being used. See the <a href="https://github.com/x64bitMango/Puppeteer" style="color: blue">GitHub repository</a> for more information.</small></div>
 
     <div class="note">Want to revert the web filters back to default? Just close your device or shut it down and wait a minute or two for it to soft reset the agent-specific filters, open it back up, log back in, and voilà. If this doesn't work, make sure you have no blocked pages open when you shutdown/restart your device.</div>
 </div>
